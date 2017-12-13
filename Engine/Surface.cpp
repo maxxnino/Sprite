@@ -17,20 +17,35 @@ Surface::Surface(const std::string& filename)
 
 	assert(bMapInfoHeader.biCompression == BI_RGB);
 	assert(bMapInfoHeader.biBitCount == 32 || bMapInfoHeader.biBitCount == 24);
-
+	int yStart = 0;
+	int yEnd = 0;
+	int dy = 0;
+	if (bMapInfoHeader.biHeight > 0 )
+	{
+		height = bMapInfoHeader.biHeight;
+		yStart = height - 1;
+		yEnd = 0;
+		dy = -1;
+	}
+	else
+	{
+		height = -bMapInfoHeader.biHeight;
+		yStart = 0;
+		yEnd = height;
+		dy = 1;
+	}
 	width = bMapInfoHeader.biWidth;
-	height = bMapInfoHeader.biHeight;
 
 	pPixel = new Color[width*height];
 
 	const int padding = (4 - (width * 3) % 4) % 4;
 
 	file.seekg(bMapFileHeader.bfOffBits);
-	for (int y = 0; y < height; y++)
+	for (; yStart != yEnd; yStart +=dy)
 	{
 		for (int x = 0; x < width; x++)
 		{
-			PutPixel(x,y,Color( (unsigned char)file.get(),(unsigned char)file.get() ,(unsigned char)file.get() ));
+			PutPixel(x, yStart,Color( (unsigned char)file.get(),(unsigned char)file.get() ,(unsigned char)file.get() ));
 			if (bMapInfoHeader.biBitCount == 32)
 			{
 				file.seekg(1,std::ios::cur);
