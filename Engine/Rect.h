@@ -42,6 +42,14 @@ public:
 			&& bottom > rect.top
 			&& top < rect.bottom;
 	}
+	T GetWidth() const
+	{
+		return right - left;
+	}
+	T GetHeight() const
+	{
+		return bottom - top;
+	}
 
 public:
 	T left;

@@ -26,7 +26,7 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	chin("dib.bmp")
+	chin("marle32x48.bmp")
 {
 }
 
@@ -44,5 +44,5 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	gfx.DrawSprite({ 100, 100 }, chin, SpriteEffect::Ghost{ Colors::White });
+	gfx.DrawSprite({ 800 - 64,  600 - 86 }, chin, SpriteEffect::Ghost{ Colors::White });
 }

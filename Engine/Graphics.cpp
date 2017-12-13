@@ -316,6 +316,11 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
+RectI Graphics::GetRect() const
+{
+	return RectI(0,0, ScreenWidth, ScreenHeight);
+}
+
 Color Graphics::GetPixel(int x, int y) const
 {
 	return pSysBuffer[Graphics::ScreenWidth * y + x];

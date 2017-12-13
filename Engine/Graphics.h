@@ -58,16 +58,52 @@ public:
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
 	}
 	void PutPixel( int x,int y,Color c );
+	RectI GetRect() const;
 	Color GetPixel(int x, int y) const;
 
 	template <typename E>
 	void DrawSprite(VecI pos, Surface& surf, E effect)
 	{
-		for (int sy = 0; sy < surf.GetHeight(); sy++)
+		DrawSprite(pos, GetRect(), surf.GetRect(), surf, effect);
+	}
+
+	template <typename E>
+	void DrawSprite(VecI pos, const RectI& rect,Surface& surf, E effect)
+	{
+		DrawSprite(pos, GetRect(), rect, surf, effect);
+	}
+
+	template <typename E>
+	void DrawSprite(VecI pos, const RectI& Clip, const RectI& rect, Surface& surf, E effect)
+	{
+		int xStart = rect.left;
+		int xEnd = rect.right;
+		int yStart = rect.top;
+		int yEnd = rect.bottom;
+
+		if (pos.x < Clip.left)
 		{
-			for (int sx = 0; sx < surf.GetWidth(); sx++)
+			xStart = Clip.left - pos.x;
+			pos.x = Clip.left;
+		}
+		if (pos.y < Clip.top)
+		{
+			yStart = Clip.top - pos.y;
+			pos.y = Clip.top;
+		}
+		if (pos.x + rect.GetWidth() > Clip.right)
+		{
+			xEnd -= pos.x + rect.GetWidth() - Clip.right;
+		}
+		if (pos.y + rect.GetHeight() > Clip.bottom)
+		{
+			yEnd -= pos.y + rect.GetHeight() - Clip.bottom;
+		}
+		for (int sy = yStart; sy < yEnd; sy++)
+		{
+			for (int sx = xStart; sx < xEnd; sx++)
 			{
-				effect(VecI(pos.x + sx, pos.y + sy),surf.GetPixel(sx,sy) ,*this);
+				effect(VecI(pos.x + sx - xStart, pos.y + sy - yStart), surf.GetPixel(sx, sy), *this);
 			}
 		}
 	}
