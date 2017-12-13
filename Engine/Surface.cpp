@@ -24,7 +24,7 @@ Surface::Surface(const std::string& filename)
 	{
 		height = bMapInfoHeader.biHeight;
 		yStart = height - 1;
-		yEnd = 0;
+		yEnd = -1;
 		dy = -1;
 	}
 	else
