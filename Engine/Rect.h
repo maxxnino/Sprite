@@ -5,7 +5,7 @@ template <typename T>
 class Rect_
 {
 public:
-	RectF() = default;
+	Rect_<T>() = default;
 	Rect_<T>(T left, T top, T right, T bottom)
 		:
 		left(left),
