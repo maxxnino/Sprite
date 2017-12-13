@@ -20,6 +20,7 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include"SpriteEffect.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -43,5 +44,5 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	gfx.DrawSprite(100, 100, chin);
+	gfx.DrawSprite({ 100, 100 }, chin, SpriteEffect::Ghost{ Colors::White });
 }

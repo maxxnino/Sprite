@@ -58,7 +58,20 @@ public:
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
 	}
 	void PutPixel( int x,int y,Color c );
-	void DrawSprite(int x, int y, Surface& surf);
+	Color GetPixel(int x, int y) const;
+
+	template <typename E>
+	void DrawSprite(VecI pos, Surface& surf, E effect)
+	{
+		for (int sy = 0; sy < surf.GetHeight(); sy++)
+		{
+			for (int sx = 0; sx < surf.GetWidth(); sx++)
+			{
+				effect(VecI(pos.x + sx, pos.y + sy),surf.GetPixel(sx,sy) ,*this);
+			}
+		}
+	}
+
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
