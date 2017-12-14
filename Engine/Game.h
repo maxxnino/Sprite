@@ -23,8 +23,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
-#include "Surface.h"
-#include "Animation.h"
+#include "Character.h"
 #include "FrameTimer.h"
 
 class Game
@@ -45,8 +44,7 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	Surface chin;
 	FrameTimer ft;
-	Animation animate = { 0,48,32,48,4,0.1f };
+	Character link = { "link90x90.bmp",90,90 };
 	/********************************/
 };

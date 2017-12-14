@@ -25,8 +25,7 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd ),
-	chin("marle32x48.bmp")
+	gfx( wnd )
 {
 }
 
@@ -40,10 +39,28 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	animate.Update(ft.Mark());
+	VecF dir = { 0.0f,0.0f };
+	if (wnd.kbd.KeyIsPressed('A'))
+	{
+		dir.x = -1.0f;
+	}
+	if (wnd.kbd.KeyIsPressed('D'))
+	{
+		dir.x = 1.0f;
+	}
+	if (wnd.kbd.KeyIsPressed('W'))
+	{
+		dir.y = -1.0f;
+	}
+	if (wnd.kbd.KeyIsPressed('S'))
+	{
+		dir.y = 1.0f;
+	}
+	link.SetDirection(dir);
+	link.Update(ft.Mark());
 }
 
 void Game::ComposeFrame()
 {
-	animate.Draw({ 400,  300 }, chin, gfx, SpriteEffect::Chroma{ Colors::Magenta });
+	link.Draw(gfx);
 }
