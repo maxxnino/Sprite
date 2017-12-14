@@ -24,6 +24,8 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Surface.h"
+#include "Animation.h"
+#include "FrameTimer.h"
 
 class Game
 {
@@ -44,5 +46,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Surface chin;
+	FrameTimer ft;
+	Animation animate = { 0,48,32,48,4,0.1f };
 	/********************************/
 };

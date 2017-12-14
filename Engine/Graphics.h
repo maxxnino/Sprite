@@ -62,19 +62,19 @@ public:
 	Color GetPixel(int x, int y) const;
 
 	template <typename E>
-	void DrawSprite(VecI pos, Surface& surf, E effect)
+	void DrawSprite(VecI pos, const Surface& surf, E effect)
 	{
 		DrawSprite(pos, GetRect(), surf.GetRect(), surf, effect);
 	}
 
 	template <typename E>
-	void DrawSprite(VecI pos, const RectI& rect,Surface& surf, E effect)
+	void DrawSprite(VecI pos, const RectI& rect,const Surface& surf, E effect)
 	{
 		DrawSprite(pos, GetRect(), rect, surf, effect);
 	}
 
 	template <typename E>
-	void DrawSprite(VecI pos, const RectI& Clip, const RectI& rect, Surface& surf, E effect)
+	void DrawSprite(VecI pos, const RectI& Clip, const RectI& rect, const Surface& surf, E effect)
 	{
 		int xStart = rect.left;
 		int xEnd = rect.right;

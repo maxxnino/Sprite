@@ -20,7 +20,7 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include"SpriteEffect.h"
+#include "SpriteEffect.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -40,9 +40,10 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	animate.Update(ft.Mark());
 }
 
 void Game::ComposeFrame()
 {
-	gfx.DrawSprite({ 800 - 64,  600 - 86 }, chin, SpriteEffect::Ghost{ Colors::White });
+	animate.Draw({ 400,  300 }, chin, gfx, SpriteEffect::Chroma{ Colors::Magenta });
 }
