@@ -15,7 +15,7 @@ public:
 	}
 
 	template <typename E>
-	void Draw(VecI pos, RectI clip, const Surface& surf, Graphics & gfx, E effect) const
+	void Draw(VecI pos, RectI& clip, const Surface& surf, Graphics & gfx, E effect) const
 	{
 		gfx.DrawSprite(pos, clip, frames[curFrame], surf, effect);
 	}

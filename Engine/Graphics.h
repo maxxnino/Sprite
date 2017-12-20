@@ -83,13 +83,13 @@ public:
 
 		if (pos.x < Clip.left)
 		{
-			xStart = Clip.left - pos.x;
-			pos.x = Clip.left;
+			xStart += Clip.left - pos.x;
+			pos.x = 0;
 		}
 		if (pos.y < Clip.top)
 		{
-			yStart = Clip.top - pos.y;
-			pos.y = Clip.top;
+			yStart += Clip.top - pos.y;
+			pos.y = 0;
 		}
 		if (pos.x + rect.GetWidth() > Clip.right)
 		{

@@ -40,19 +40,19 @@ void Character::SetDirection(VecF dir)
 	{
 		curAnimation = Sequence::WalkingUp;
 	}
-	else if (vel.x <= 0.0f)
+	else if (vel.x < 0.0f)
 	{
 		curAnimation = Sequence::StandingLeft;
 	}
-	else if (vel.x >= 0.0f)
+	else if (vel.x > 0.0f)
 	{
 		curAnimation = Sequence::StandingRight;
 	}
-	else if (vel.y <= 0.0f)
+	else if (vel.y < 0.0f)
 	{
 		curAnimation = Sequence::StandingUp;
 	}
-	else if (vel.x >= 0.0f)
+	else if (vel.x > 0.0f)
 	{
 		curAnimation = Sequence::StandingDown;
 	}
