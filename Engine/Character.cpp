@@ -52,7 +52,7 @@ void Character::SetDirection(VecF dir)
 	{
 		curAnimation = Sequence::StandingUp;
 	}
-	else if (vel.x > 0.0f)
+	else if (vel.y > 0.0f)
 	{
 		curAnimation = Sequence::StandingDown;
 	}
