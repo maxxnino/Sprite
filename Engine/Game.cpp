@@ -39,6 +39,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	const float dt = ft.Mark();
 	VecF dir = { 0.0f,0.0f };
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
@@ -57,10 +58,12 @@ void Game::UpdateModel()
 		dir.y = 1.0f;
 	}
 	link.SetDirection(dir);
-	link.Update(ft.Mark());
+	link.Update(dt);
+	menu.Update(wnd.mouse,dt);
 }
 
 void Game::ComposeFrame()
 {
 	link.Draw(gfx);
+	menu.Draw(gfx);
 }

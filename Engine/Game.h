@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "Character.h"
 #include "FrameTimer.h"
+#include "Menu.h"
 
 class Game
 {
@@ -46,5 +47,6 @@ private:
 	/*  User Variables              */
 	FrameTimer ft;
 	Character link = { "link90x90.bmp",90,90 };
+	Menu menu;
 	/********************************/
 };

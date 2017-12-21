@@ -108,6 +108,8 @@ public:
 		}
 	}
 
+	void DrawRect(const RectI& rect, int thick, Color c);
+
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
@@ -124,6 +126,6 @@ private:
 	D3D11_MAPPED_SUBRESOURCE							mappedSysBufferTexture;
 	Color*                                              pSysBuffer = nullptr;
 public:
-	static constexpr int ScreenWidth = 800;
-	static constexpr int ScreenHeight = 600;
+	static constexpr int ScreenWidth = 1280;
+	static constexpr int ScreenHeight = 720;
 };

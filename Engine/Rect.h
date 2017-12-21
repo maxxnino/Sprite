@@ -35,6 +35,10 @@ public:
 		return Vec2_<T>((left + right) / (T)2, (top + bottom) / (T)2);
 	}
 
+	bool isContaint(Vec2_<T> pos)
+	{
+		return pos.x >= left && pos.x <= right && pos.y >= top && pos.y <= bottom;
+	}
 	bool isOverLap(const Rect_<T> & rect) const
 	{
 		return left < rect.right

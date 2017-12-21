@@ -240,6 +240,40 @@ Graphics::Graphics( HWNDKey& key )
 		_aligned_malloc( sizeof( Color ) * Graphics::ScreenWidth * Graphics::ScreenHeight,16u ) );
 }
 
+void Graphics::DrawRect(const RectI& rect, int thick, Color c)
+{
+	const int width = rect.GetWidth();
+	const int height = rect.GetHeight();
+	for (int y = 0; y < thick; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			PutPixel(rect.left + x, rect.top + y , c);
+		}
+	}
+	for (int y = thick; y < height; y++)
+	{
+		for (int x = 0; x < thick; x++)
+		{
+			PutPixel(rect.left + x, rect.top + y, c);
+		}
+	}
+	for (int y = thick; y < height; y++)
+	{
+		for (int x = width - thick; x < width; x++)
+		{
+			PutPixel(rect.left + x, rect.top + y, c);
+		}
+	}
+	for (int y = height - thick; y < height; y++)
+	{
+		for (int x = thick; x < width - thick; x++)
+		{
+			PutPixel(rect.left + x, rect.top + y, c);
+		}
+	}
+}
+
 Graphics::~Graphics()
 {
 	// free sysbuffer memory (aligned free)
