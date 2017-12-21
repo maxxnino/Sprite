@@ -7,30 +7,41 @@
 
 class Menu
 {
+public:
+	enum TypeButton
+	{
+		CraftButton,
+		ElementButton
+	};
 	enum TypeMenu
 	{
-		SkillElement,
-		CraftButton,
-		SkillSlot,
-		Count
+		SelectElement,
+		MainMenu
 	};
-	struct RectAndColor
+	enum TypeSkill
+	{
+		Fire,
+		Water,
+		Lighting,
+		None
+	};
+	struct MenuVariable
 	{
 		RectI rect;
 		Color menuColor;
-		TypeMenu type;
+		TypeButton typeButton;
+		TypeSkill TypeSkill = TypeSkill::None;
 	};
 public:
+	Menu(int nam);
 	void Draw(Graphics& gfx) const;
-	void ButtonClick(RectAndColor& rect);
-	void Update(const Mouse& mouse, float dt);
+	void ButtonClick(MenuVariable& rect);
+	void Update(Mouse& mouse, float dt);
 private:
-	std::vector<RectAndColor> menu = { {RectI(850, 50,970,170),Colors::Yellow,SkillElement },
-										{RectI(970, 50, 1090, 170),Colors::Yellow,SkillElement },
-										{RectI(1090, 50, 1210, 170), Colors::Yellow,SkillElement },
-										{RectI(890, 210, 1170, 310), Colors::Yellow ,CraftButton } };
+	std::vector<MenuVariable> mainMenu;
+	std::vector<MenuVariable> ElementMenu;
 	Surface surf = ("Skill_menu.bmp");
-	bool isCoolDown = false;
-	float CoolDownTime = 0.5f;
-	float curCoolDown = 0.0f;
+	int buttonClick = 0;
+	TypeSkill subbuttonClick = None;
+	TypeMenu typeMenu = TypeMenu::MainMenu;
 };

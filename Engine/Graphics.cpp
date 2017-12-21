@@ -274,6 +274,19 @@ void Graphics::DrawRect(const RectI& rect, int thick, Color c)
 	}
 }
 
+void Graphics::DrawRectAndColor(const RectI & rect, int thick, Color colorBorder, Color colorRect)
+{
+	DrawRect(rect, thick, colorBorder);
+	for (int y = rect.top + thick; y < rect.bottom - thick; y++)
+	{
+		for (int x = rect.left + thick; x < rect.right - thick; x++)
+		{
+			PutPixel(x, y, colorRect);
+		}
+	}
+
+}
+
 Graphics::~Graphics()
 {
 	// free sysbuffer memory (aligned free)

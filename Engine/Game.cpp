@@ -25,7 +25,8 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	menu(1)
 {
 }
 
@@ -40,30 +41,50 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	const float dt = ft.Mark();
-	VecF dir = { 0.0f,0.0f };
-	if (wnd.kbd.KeyIsPressed('A'))
+	if (wnd.kbd.KeyIsPressed('I'))
 	{
-		dir.x = -1.0f;
+		gameState = 1;
 	}
-	if (wnd.kbd.KeyIsPressed('D'))
+	if (wnd.kbd.KeyIsPressed('O'))
 	{
-		dir.x = 1.0f;
+		gameState = 0;
 	}
-	if (wnd.kbd.KeyIsPressed('W'))
+	if (gameState == 0)
 	{
-		dir.y = -1.0f;
+		VecF dir = { 0.0f,0.0f };
+		if (wnd.kbd.KeyIsPressed('A'))
+		{
+			dir.x = -1.0f;
+		}
+		if (wnd.kbd.KeyIsPressed('D'))
+		{
+			dir.x = 1.0f;
+		}
+		if (wnd.kbd.KeyIsPressed('W'))
+		{
+			dir.y = -1.0f;
+		}
+		if (wnd.kbd.KeyIsPressed('S'))
+		{
+			dir.y = 1.0f;
+		}
+		link.SetDirection(dir);
+		link.Update(dt);
 	}
-	if (wnd.kbd.KeyIsPressed('S'))
+	else
 	{
-		dir.y = 1.0f;
+		menu.Update(wnd.mouse, dt);
 	}
-	link.SetDirection(dir);
-	link.Update(dt);
-	menu.Update(wnd.mouse,dt);
 }
 
 void Game::ComposeFrame()
 {
-	link.Draw(gfx);
-	menu.Draw(gfx);
+	if (gameState == 1)
+	{
+		menu.Draw(gfx);
+	}
+	else
+	{
+		link.Draw(gfx);
+	}
 }

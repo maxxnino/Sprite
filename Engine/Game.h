@@ -48,5 +48,6 @@ private:
 	FrameTimer ft;
 	Character link = { "link90x90.bmp",90,90 };
 	Menu menu;
+	int gameState = 0;
 	/********************************/
 };
