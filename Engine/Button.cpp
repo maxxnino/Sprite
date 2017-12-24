@@ -1,25 +1,28 @@
 #include "Button.h"
 
-Button::Button(RectI rectButton, Color buttonColor, TypeElement typeEle)
+Button::Button(RectI rectButton, Color buttonColor)
 	:
 	rectButton(rectButton),
-	buttonColor(buttonColor),
-	typeEle(typeEle)
+	buttonColor(buttonColor)
 {}
 
-//father
+void Button::Draw(Graphics & gfx) const
+{
+	gfx.DrawRect(rectButton, 10, buttonColor);
+}
 
-void Button::updateMouse(Mouse & mouse)
+
+bool Button::Update(Mouse& mouse, float dt)
 {
 	if (rectButton.isContaint(mouse.GetPos()))
 	{
-		buttonColor = Colors::Green;
+		buttonColor = Colors::Blue;
 		while (!mouse.IsEmpty())
 		{
 			const Mouse::Event e = mouse.Read();
 			if (e.GetType() == Mouse::Event::Type::LPress)
 			{
-				Clicked();
+				return true;
 			}
 		}
 	}
@@ -27,84 +30,116 @@ void Button::updateMouse(Mouse & mouse)
 	{
 		buttonColor = Colors::Yellow;
 	}
+	return false;
 }
 
-void Button::ChangeElement(TypeElement newElement)
+//ElementButton
+ElementButton::ElementButton(RectI rectButton, Color buttonColor, ElementType elementType)
+		:
+	Button(rectButton, buttonColor),
+	elementType(elementType)
 {
-	typeEle = newElement;
+	changeColor(elementType);
 }
 
-void Button::ChangeColor(Color c)
+void ElementButton::ChangeType(ElementButton::ElementType element)
 {
-	buttonColor = c;
+	elementType = element;
+	changeColor(element);
 }
 
-void Button::Clicked()
+void ElementButton::Draw(Graphics & gfx) const
 {
-	isClicked = true;
+	gfx.DrawRectAndColor(rectButton, 10, buttonColor, insideColor);
 }
 
-
-//Child class
-
-CreateSkill::CreateSkill(RectI rectButton, Color buttonColor, TypeElement typeEle)
-	:
-	Button(rectButton, buttonColor, typeEle)
-{}
-
-void CreateSkill::Update(Mouse & mouse, Menu& menu, Button* whocall)
+const ElementButton::ElementType& ElementButton::GetType() const
 {
+	return elementType;
+}
 
-	Button::updateMouse(mouse);
-	if (isClicked)
+void ElementButton::changeColor(ElementType element)
+{
+	switch (element)
 	{
-		ChangeColor(Colors::Blue);
+	case ElementButton::Fire:
+		insideColor = Colors::MakeRGB(251, 203, 98);
+		break;
+	case ElementButton::Water:
+		insideColor = Colors::MakeRGB(103, 216, 236);
+		break;
+	case ElementButton::Earth:
+		insideColor = Colors::MakeRGB(73, 43, 19);
+		break;
+	case ElementButton::Lighting:
+		insideColor = Colors::MakeRGB(14, 96, 96);
+		break;
+	case ElementButton::Ice:
+		insideColor = Colors::MakeRGB(99, 213, 212);
+		break;
+	case ElementButton::Wind:
+		insideColor = Colors::MakeRGB(16, 149, 103);
+		break;
+	case ElementButton::None:
+		insideColor = Colors::White;
+		break;
+	default:
+		insideColor = Colors::Magenta;
+		break;
 	}
 }
 
-void CreateSkill::Draw(Graphics & gfx, const Menu & menu) 
+//CraftButton
+bool CraftButton::Update(Mouse & mouse, float dt)
 {
-	gfx.DrawRect(rectButton, 10, buttonColor);
-}
-
-CraftSlot::CraftSlot(RectI rectButton, Color buttonColor, TypeElement typeEle)
-	:
-	Button(rectButton, buttonColor, typeEle)
-{}
-
-void CraftSlot::Update(Mouse & mouse, Menu& menu, Button* whocall)
-{
-	Button::updateMouse(mouse);
-	if (isClicked)
+	if (rectButton.isContaint(mouse.GetPos()))
 	{
-		menu.ChangeState();
+		buttonColor = Colors::Blue;
+		while (!mouse.IsEmpty())
+		{
+			const Mouse::Event e = mouse.Read();
+			if (e.GetType() == Mouse::Event::Type::LPress)
+			{
+				if (!IsEnableEffect)
+				{
+					IsEnableEffect = true;
+				}
+				CycleColor(dt);
+				return true;
+			}
+		}
 	}
-}
-
-void CraftSlot::Draw(Graphics & gfx, const Menu & menu)
-{
-	gfx.DrawRect(rectButton, 10, buttonColor);
-}
-
-ElementSlot::ElementSlot(RectI rectButton, Color buttonColor, TypeElement typeEle)
-	:
-	Button(rectButton, buttonColor, typeEle)
-{}
-
-void ElementSlot::Update(Mouse & mouse, Menu & menu, Button* whocall)
-{
-	Button::updateMouse(mouse);
-	if (isClicked)
+	else
 	{
-		menu.ChangeState();
-		whocall->ChangeElement(typeEle);
+		buttonColor = Colors::Yellow;
 	}
+	CycleColor(dt);
+	return false;
 }
 
-void ElementSlot::Draw(Graphics & gfx, const Menu & menu) 
+void CraftButton::CycleColor(float dt)
 {
-	if (menu.GetState() == Menu::TypeMenu::SelectElement)
+	if (IsEnableEffect)
 	{
-		gfx.DrawRect(rectButton, 10, buttonColor);
+		curEffectTime += dt;
+		holdColor += dt;
+		while (holdColor >= timeEachColor)
+		{
+			holdColor -= timeEachColor;
+			indexColor++;
+			if (indexColor >= ColorCycle.size())
+			{
+				indexColor = 0;
+			}
+		}
+		buttonColor = ColorCycle[indexColor];
+		if (curEffectTime >= effectTime)
+		{
+			curEffectTime = 0.0f;
+			holdColor = 0.0f;
+			indexColor = 0;
+			IsEnableEffect = false;
+			buttonColor = Colors::Yellow;
+		}
 	}
 }

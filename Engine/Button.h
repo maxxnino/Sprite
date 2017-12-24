@@ -1,59 +1,58 @@
 #pragma once
-#include "Menu.h"
 #include "Graphics.h"
 #include "Mouse.h"
 #include <vector>
 
-enum TypeElement
-{
-	Fire,
-	Water,
-	Lighting,
-	Wind,
-	Earth,
-	None
-};
+
 class Button
 {
 public:
-	Button(RectI rectButton, Color buttonColor, TypeElement typeEle = TypeElement::None);
-	virtual void Draw(Graphics& gfx, const Menu& menu) = 0;
-	void updateMouse(Mouse& mouse);
-	virtual void Update(Mouse& mouse, Menu& menu, Button* whocall) = 0;
-	void ChangeElement(TypeElement newElement);
-	void ChangeColor(Color c);
-	void Clicked();
-	virtual ~Button(){}
-	//Accesser
+	Button(RectI rectButton, Color buttonColor);
+	void Draw(Graphics& gfx) const;
+	bool Update(Mouse& mouse, float dt);
 protected:
-	TypeElement typeEle;
 	RectI rectButton;
 	Color buttonColor;
-	bool isClicked = false;
 };
-
-//Child class
-
-class CreateSkill : public Button
+class CraftButton : public Button
 {
 public:
-	CreateSkill(RectI rectButton, Color buttonColor, TypeElement typeEle = TypeElement::None);
-	virtual void Update(Mouse& mouse, Menu& menu, Button* whocall) override;
-	virtual void Draw(Graphics& gfx, const Menu& menu) override;
+	CraftButton(RectI rectButton, Color buttonColor)
+		:
+		Button(rectButton, buttonColor)
+	{}
+	bool Update(Mouse& mouse, float dt);
+	void CycleColor(float dt);
+private:
+	std::vector<Color> ColorCycle = { Colors::Blue,Colors::Red,Colors::Magenta };
+	bool IsEnableEffect = false;
+	float effectTime = 1.0f;
+	float curEffectTime = 0.0f;
+	float timeEachColor = 0.3f;
+	float holdColor = 0.0f;
+	int indexColor = 0;
 };
 
-class CraftSlot : public Button
+class ElementButton : public Button
 {
 public:
-	CraftSlot(RectI rectButton, Color buttonColor, TypeElement typeEle = TypeElement::None);
-	virtual void Update(Mouse& mouse, Menu& menu, Button* whocall) override;
-	virtual void Draw(Graphics& gfx, const Menu& menu) override;
-};
 
-class ElementSlot : public Button
-{
-public:
-	ElementSlot(RectI rectButton, Color buttonColor, TypeElement typeEle = TypeElement::None);
-	virtual void Update(Mouse& mouse, Menu& menu, Button* whocall) override;
-	virtual void Draw(Graphics& gfx, const Menu& menu) override;
+	enum ElementType
+	{
+		Fire,
+		Water,
+		Earth,
+		Lighting,
+		Ice,
+		Wind,
+		None
+	};
+	ElementButton(RectI rectButton, Color buttonColor, ElementType elementType);
+	void ChangeType(ElementButton::ElementType element);
+	void Draw(Graphics& gfx) const;
+	const ElementType& GetType() const;
+	void changeColor(ElementType element);
+private:
+	ElementType elementType = None;
+	Color insideColor;
 };

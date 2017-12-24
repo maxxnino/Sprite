@@ -1,23 +1,43 @@
 #include "Menu.h"
 
 
-Menu::Menu(int nam)
+Menu::Menu(Menu::TypeMenu typeMenu)
+	:
+	typeMenu(typeMenu)
 {
-	button.emplace_back(new CraftSlot( RectI(850, 50, 970, 170), Colors::Yellow));
-	button.emplace_back(new CraftSlot( RectI(970, 50, 1090, 170), Colors::Yellow));
-	button.emplace_back(new CraftSlot( RectI(1090, 50, 1210, 170), Colors::Yellow));
-	button.emplace_back(new CreateSkill( RectI(890, 210, 1170, 310), Colors::Yellow));
-	button.emplace_back(new ElementSlot( RectI(850, 315, 970, 435), Colors::Yellow, TypeElement::Fire ));
-	button.emplace_back(new ElementSlot( RectI(970, 315, 1090, 435), Colors::Yellow, TypeElement::Water ));
-	button.emplace_back(new ElementSlot( RectI(1090, 315, 1210, 435), Colors::Yellow, TypeElement::Lighting ));
+	//Select Ellement
+	elementButton.emplace_back(ElementButton( RectI(850, 50, 970, 170), Colors::Yellow, ElementButton::ElementType::None));
+	elementButton.emplace_back(ElementButton( RectI(970, 50, 1090, 170), Colors::Yellow, ElementButton::ElementType::None));
+	elementButton.emplace_back(ElementButton( RectI(1090, 50, 1210, 170), Colors::Yellow, ElementButton::ElementType::None));
+	//Craft Button
+	craftButton.emplace_back(CraftButton( RectI(890, 210, 1170, 310), Colors::Yellow));
+	//Eleemt Slot
+	elementSlot.emplace_back(ElementButton( RectI(850, 315, 970, 435), Colors::Yellow, ElementButton::ElementType::Fire));
+	elementSlot.emplace_back(ElementButton( RectI(970, 315, 1090, 435), Colors::Yellow, ElementButton::ElementType::Water));
+	elementSlot.emplace_back(ElementButton( RectI(1090, 315, 1210, 435), Colors::Yellow, ElementButton::ElementType::Earth));
 }
 
 void Menu::Draw(Graphics & gfx) const
 {
 	gfx.DrawSprite(VecI(0, 0), surf, SpriteEffect::Copy());
-	for (auto c : button)
+	switch (typeMenu)
 	{
-		c->Draw(gfx,*this);
+	case Menu::SelectElement:
+		for (auto& c : elementSlot)
+		{
+			c.Draw(gfx);
+		}
+		craftButton[0].Draw(gfx);
+		break;
+	case Menu::MainMenu:
+		for (auto& c : elementButton)
+		{
+			c.Draw(gfx);
+		}
+		craftButton[0].Draw(gfx);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -35,13 +55,37 @@ void Menu::ChangeState()
 
 void Menu::Update(Mouse& mouse, float dt)
 {
-	for (auto c: button)
+	int i = 0;
+	switch (typeMenu)
 	{
-		c->Update(mouse, *this,c);
+	case Menu::SelectElement:
+		for (auto& c : elementSlot)
+		{
+			if (c.Update(mouse, dt))
+			{
+				elementButton[indexElementButton].ChangeType(c.GetType());
+				ChangeState();
+				break;
+			}
+		}
+		break;
+	case Menu::MainMenu:
+		for (auto& c : elementButton)
+		{
+			for (auto& c : craftButton)
+			{
+				c.Update(mouse, dt);
+			}
+			if (c.Update(mouse, dt))
+			{
+				indexElementButton = i;
+				ChangeState();
+				break;
+			}
+			i++;
+		}
+		break;
+	default:
+		break;
 	}
-}
-
-const Menu::TypeMenu& Menu::GetState() const
-{
-	return typeMenu;
 }

@@ -25,8 +25,7 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd ),
-	menu(1)
+	gfx( wnd )
 {
 }
 

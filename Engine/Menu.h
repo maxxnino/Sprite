@@ -15,13 +15,18 @@ public:
 		MainMenu
 	};
 public:
-	Menu(int nam);
+	Menu(Menu::TypeMenu typeMenu = MainMenu);
 	void Draw(Graphics& gfx) const;
 	void ChangeState();
 	void Update(Mouse& mouse, float dt);
-	const TypeMenu& GetState() const;
 private:
-	std::vector<Button*> button;
+	// Button Container
+	std::vector<ElementButton> elementButton;
+	std::vector<CraftButton> craftButton;
+	std::vector<ElementButton> elementSlot;
+	//Background Menu
 	Surface surf = ("Skill_menu.bmp");
 	TypeMenu typeMenu = TypeMenu::MainMenu;
+	//Store index Element when choose element
+	int indexElementButton;
 };
