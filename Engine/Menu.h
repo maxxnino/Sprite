@@ -4,6 +4,7 @@
 #include "SpriteEffect.h"
 #include "Mouse.h"
 #include "Button.h"
+#include "Sound.h"
 #include <vector>
 
 class Menu
@@ -21,11 +22,15 @@ public:
 	void Update(Mouse& mouse, float dt);
 private:
 	// Button Container
+	std::vector<ElementSlot> elementSlot;
 	std::vector<ElementButton> elementButton;
 	std::vector<CraftButton> craftButton;
-	std::vector<ElementButton> elementSlot;
+	std::vector<Surface> skillIcon;
 	//Background Menu
 	Surface surf = ("Skill_menu.bmp");
+	Sound buttonSound = { L"Sounds\\Slither0.wav" };
+	Sound clickSound = { L"Sounds\\Eat.wav" };
+	Sound CraftSound = { L"Sounds\\arkpad.wav" };
 	TypeMenu typeMenu = TypeMenu::MainMenu;
 	//Store index Element when choose element
 	int indexElementButton;

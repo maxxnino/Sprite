@@ -8,98 +8,79 @@ Button::Button(RectI rectButton, Color buttonColor)
 
 void Button::Draw(Graphics & gfx) const
 {
-	gfx.DrawRect(rectButton, 10, buttonColor);
+	gfx.DrawRect(rectButton, 4, buttonColor);
 }
 
 
-bool Button::Update(Mouse& mouse, float dt)
+bool Button::Update(Mouse& mouse, float dt, Sound& sound, Sound& clickSound)
 {
 	if (rectButton.isContaint(mouse.GetPos()))
 	{
-		buttonColor = Colors::Blue;
+		if (isPlaySound)
+		{
+			sound.Play();
+			isPlaySound = false;
+		}
+		buttonColor = Colors::Yellow;
 		while (!mouse.IsEmpty())
 		{
 			const Mouse::Event e = mouse.Read();
 			if (e.GetType() == Mouse::Event::Type::LPress)
 			{
+				clickSound.Play();
 				return true;
 			}
 		}
 	}
 	else
 	{
-		buttonColor = Colors::Yellow;
+		isPlaySound = true;
+		buttonColor = Colors::Blue;
 	}
 	return false;
 }
 
-//ElementButton
-ElementButton::ElementButton(RectI rectButton, Color buttonColor, ElementType elementType)
+
+//ElementSlot
+ElementSlot::ElementSlot(RectI rectButton, Color buttonColor, ElementType elementType)
 		:
 	Button(rectButton, buttonColor),
 	elementType(elementType)
-{
-	changeColor(elementType);
-}
+{}
 
-void ElementButton::ChangeType(ElementButton::ElementType element)
+void ElementSlot::ChangeType(ElementSlot::ElementType element)
 {
 	elementType = element;
-	changeColor(element);
 }
 
-void ElementButton::Draw(Graphics & gfx) const
+void ElementSlot::Draw(Graphics & gfx, const Surface& iconTexture) const
 {
-	gfx.DrawRectAndColor(rectButton, 10, buttonColor, insideColor);
+	gfx.DrawSprite({ rectButton.left,rectButton.top }, iconTexture, SpriteEffect::Copy());
+	Button::Draw(gfx);
 }
 
-const ElementButton::ElementType& ElementButton::GetType() const
+const ElementSlot::ElementType& ElementSlot::GetType() const
 {
 	return elementType;
 }
 
-void ElementButton::changeColor(ElementType element)
-{
-	switch (element)
-	{
-	case ElementButton::Fire:
-		insideColor = Colors::MakeRGB(251, 203, 98);
-		break;
-	case ElementButton::Water:
-		insideColor = Colors::MakeRGB(103, 216, 236);
-		break;
-	case ElementButton::Earth:
-		insideColor = Colors::MakeRGB(73, 43, 19);
-		break;
-	case ElementButton::Lighting:
-		insideColor = Colors::MakeRGB(14, 96, 96);
-		break;
-	case ElementButton::Ice:
-		insideColor = Colors::MakeRGB(99, 213, 212);
-		break;
-	case ElementButton::Wind:
-		insideColor = Colors::MakeRGB(16, 149, 103);
-		break;
-	case ElementButton::None:
-		insideColor = Colors::White;
-		break;
-	default:
-		insideColor = Colors::Magenta;
-		break;
-	}
-}
-
 //CraftButton
-bool CraftButton::Update(Mouse & mouse, float dt)
+bool CraftButton::Update(Mouse & mouse, float dt, Sound& sound, Sound& clickSound)
 {
 	if (rectButton.isContaint(mouse.GetPos()))
 	{
-		buttonColor = Colors::Blue;
+		if (isPlaySound)
+		{
+			sound.Play();
+			isPlaySound = false;
+		}
+		buttonColor = Colors::Yellow;
 		while (!mouse.IsEmpty())
 		{
 			const Mouse::Event e = mouse.Read();
 			if (e.GetType() == Mouse::Event::Type::LPress)
 			{
+				clickSound.Play();
 				if (!IsEnableEffect)
 				{
 					IsEnableEffect = true;
@@ -111,7 +92,8 @@ bool CraftButton::Update(Mouse & mouse, float dt)
 	}
 	else
 	{
-		buttonColor = Colors::Yellow;
+		isPlaySound = true;
+		buttonColor = Colors::Blue;
 	}
 	CycleColor(dt);
 	return false;
@@ -139,7 +121,17 @@ void CraftButton::CycleColor(float dt)
 			holdColor = 0.0f;
 			indexColor = 0;
 			IsEnableEffect = false;
-			buttonColor = Colors::Yellow;
+			buttonColor = Colors::Blue;
 		}
 	}
+}
+
+//ElementButton
+void ElementButton::Draw(Graphics & gfx, const std::vector<Surface>& iconTexture) const
+{
+	if (GetType() != ElementType::None)
+	{
+		gfx.DrawSprite({ rectButton.left,rectButton.top }, iconTexture[(int)GetType()], SpriteEffect::Copy());
+	}
+	Button::Draw(gfx);
 }

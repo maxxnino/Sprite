@@ -1,6 +1,9 @@
 #pragma once
 #include "Graphics.h"
+#include "Surface.h"
 #include "Mouse.h"
+#include "SpriteEffect.h"
+#include "SoundEffect.h"
 #include <vector>
 
 
@@ -9,9 +12,10 @@ class Button
 public:
 	Button(RectI rectButton, Color buttonColor);
 	void Draw(Graphics& gfx) const;
-	bool Update(Mouse& mouse, float dt);
+	bool Update(Mouse& mouse, float dt, Sound& sound, Sound& clickSound);
 protected:
 	RectI rectButton;
+	bool isPlaySound = false;
 	Color buttonColor;
 };
 class CraftButton : public Button
@@ -21,10 +25,10 @@ public:
 		:
 		Button(rectButton, buttonColor)
 	{}
-	bool Update(Mouse& mouse, float dt);
+	bool Update(Mouse& mouse, float dt, Sound& sound, Sound& clickSound);
 	void CycleColor(float dt);
 private:
-	std::vector<Color> ColorCycle = { Colors::Blue,Colors::Red,Colors::Magenta };
+	std::vector<Color> ColorCycle = { Colors::Green,Colors::Red,Colors::Magenta };
 	bool IsEnableEffect = false;
 	float effectTime = 1.0f;
 	float curEffectTime = 0.0f;
@@ -33,26 +37,34 @@ private:
 	int indexColor = 0;
 };
 
-class ElementButton : public Button
+class ElementSlot : public Button
 {
 public:
-
 	enum ElementType
 	{
 		Fire,
 		Water,
 		Earth,
 		Lighting,
-		Ice,
+		Nature,
 		Wind,
 		None
 	};
-	ElementButton(RectI rectButton, Color buttonColor, ElementType elementType);
-	void ChangeType(ElementButton::ElementType element);
-	void Draw(Graphics& gfx) const;
+	ElementSlot(RectI rectButton, Color buttonColor, ElementType elementType = ElementType::None);
+	void ChangeType(ElementSlot::ElementType element);
+	void Draw(Graphics& gfx, const Surface& iconTexture) const;
 	const ElementType& GetType() const;
-	void changeColor(ElementType element);
 private:
-	ElementType elementType = None;
+	ElementType elementType;
 	Color insideColor;
+};
+
+class ElementButton : public ElementSlot
+{
+public:
+	ElementButton(RectI rectButton, Color buttonColor, ElementType elementType = ElementType::None)
+		:
+		ElementSlot(rectButton, buttonColor, elementType)
+	{}
+	void Draw(Graphics& gfx, const std::vector<Surface>& iconTexture) const;
 };
