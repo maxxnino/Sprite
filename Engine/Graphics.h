@@ -107,7 +107,6 @@ public:
 			}
 		}
 	}
-
 	void DrawRect(const RectI& rect, int thick, Color c);
 	void DrawRectAndColor(const RectI& rect, int thick, Color colorBorder, Color colorRect);
 

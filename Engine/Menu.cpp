@@ -24,6 +24,7 @@ Menu::Menu(Menu::TypeMenu typeMenu)
 				Colors::Yellow, static_cast<ElementSlot::ElementType>(i)));
 			i++;
 		}
+	//Load element texture
 	skillIcon.emplace_back(Surface("Element\\Fire.bmp"));
 	skillIcon.emplace_back(Surface("Element\\Water.bmp"));
 	skillIcon.emplace_back(Surface("Element\\Earth.bmp"));
@@ -35,6 +36,7 @@ Menu::Menu(Menu::TypeMenu typeMenu)
 void Menu::Draw(Graphics & gfx) const
 {
 	gfx.DrawSprite(VecI(0, 0), surf, SpriteEffect::Copy());
+	ScrollMenu.Draw(gfx);
 	switch (typeMenu)
 	{
 	case Menu::SelectElement:
@@ -89,6 +91,7 @@ void Menu::Update(Mouse& mouse, float dt)
 		}
 		break;
 	case Menu::MainMenu:
+		ScrollMenu.Update(mouse, dt, buttonSound, CraftSound);
 		for (auto& e : elementButton)
 		{
 			for (auto& c : craftButton)

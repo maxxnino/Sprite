@@ -68,3 +68,15 @@ public:
 	{}
 	void Draw(Graphics& gfx, const std::vector<Surface>& iconTexture) const;
 };
+
+class ScrollingButton : public Button
+{
+public:
+	ScrollingButton(RectI rectButton, Color buttonColor);
+	void Draw(const RectI& rectMenu, Graphics& gfx) const;
+	void MoveButtonVerical(int distanct);
+private:
+	int minDistance;
+	int maxDistance;
+	int distance;
+};

@@ -240,6 +240,7 @@ Graphics::Graphics( HWNDKey& key )
 		_aligned_malloc( sizeof( Color ) * Graphics::ScreenWidth * Graphics::ScreenHeight,16u ) );
 }
 
+
 void Graphics::DrawRect(const RectI& rect, int thick, Color c)
 {
 	const int width = rect.GetWidth();

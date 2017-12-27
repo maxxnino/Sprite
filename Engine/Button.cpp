@@ -135,3 +135,56 @@ void ElementButton::Draw(Graphics & gfx, const std::vector<Surface>& iconTexture
 	}
 	Button::Draw(gfx);
 }
+//ScrollingButton
+ScrollingButton::ScrollingButton(RectI rectButton, Color buttonColor)
+	:
+	Button(rectButton, buttonColor)
+{
+	minDistance = rectButton.top - 500;
+	maxDistance = rectButton.top;
+	distance = rectButton.top;
+}
+
+void ScrollingButton::Draw(const RectI & rectMenu, Graphics & gfx) const
+{
+	int xStart = rectButton.left;
+	int xEnd = rectButton.right;
+	int yStart = rectButton.top;
+	int yEnd = rectButton.bottom;
+
+	if (yStart >= rectMenu.bottom)
+	{
+		yStart = rectMenu.bottom;
+	}
+	if (yStart <= rectMenu.top)
+	{
+		yStart = rectMenu.top;
+	}
+	if (yEnd >= rectMenu.bottom)
+	{
+		yEnd = rectMenu.bottom;
+	}
+	if (yEnd <= rectMenu.top)
+	{
+		yEnd = rectMenu.top;
+	}
+	if (yStart != yEnd)
+	{
+		gfx.DrawRect(RectI(xStart, yStart, xEnd, yEnd), 4, buttonColor);
+	}
+}
+
+void ScrollingButton::MoveButtonVerical(int distanct)
+{
+	distance += distanct;
+	if (distance < minDistance)
+	{
+		distance = minDistance;
+	}
+	if (distance > maxDistance)
+	{
+		distance = maxDistance;
+	}
+	rectButton.top = distance;
+	rectButton.bottom = distance + 104;
+}
