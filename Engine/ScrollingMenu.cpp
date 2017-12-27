@@ -2,8 +2,17 @@
 
 ScrollingMenu::ScrollingMenu(RectI rectMenu)
 	:
-	rectMenu(rectMenu)
+	rectMenu(rectMenu),
+	iconTexture(104,104)
 {
+	for (int y = 0; y < 104; y++)
+	{
+		for (int x = 0; x < 104; x++)
+		{
+			iconTexture.PutPixel(x, y, Colors::Black);
+		}
+	}
+	
 	VecI aposButton = { rectMenu.left + buttonPadding,rectMenu.top + buttonPadding };
 	for (int i = 0; i < nButton; i++)
 	{
@@ -16,30 +25,27 @@ void ScrollingMenu::Draw(Graphics & gfx) const
 {
 	for (int i = 0; i < nButton; i++)
 	{
-		buttons[i].Draw(rectMenu, gfx);
+		buttons[i].Draw(rectMenu, gfx, iconTexture);
 	}
 }
 
-void ScrollingMenu::Update(Mouse & mouse, float dt, Sound & sound, Sound & clickSound)
+void ScrollingMenu::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float dt, Sound & sound, Sound & clickSound)
 {
-	if (rectMenu.isContaint(mouse.GetPos()))
+	if (mouseEvent == Mouse::Event::Type::WheelUp)
 	{
-		while (!mouse.IsEmpty())
-		{
-			const Mouse::Event e = mouse.Read();
-			if (e.GetType() == Mouse::Event::Type::WheelUp)
-			{
-				moveVertical = -(int)(speedScrolling * dt);
-			}
-			else if (e.GetType() == Mouse::Event::Type::WheelDown)
-			{
-				moveVertical = (int)(speedScrolling * dt);
-			}
-		}
-		for (auto& c : buttons)
-		{
-			c.MoveButtonVerical(moveVertical);
-			c.Update(mouse, dt, sound, clickSound);
-		}
+		moveVertical = -(int)(speedScrolling * dt);
+	}
+	else if (mouseEvent == Mouse::Event::Type::WheelDown)
+	{
+		moveVertical = (int)(speedScrolling * dt);
+	}
+	else
+	{
+		moveVertical = 0;
+	}
+	for (auto& c : buttons)
+	{
+		c.MoveButtonVerical(moveVertical);
+		c.Update(mouse, mouseEvent, dt, sound, clickSound);
 	}
 }

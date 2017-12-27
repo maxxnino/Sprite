@@ -12,7 +12,7 @@ class Button
 public:
 	Button(RectI rectButton, Color buttonColor);
 	void Draw(Graphics& gfx) const;
-	bool Update(Mouse& mouse, float dt, Sound& sound, Sound& clickSound);
+	bool Update(Mouse& mouse, Mouse::Event::Type& mouseEvent, float dt, Sound& sound, Sound& clickSound);
 protected:
 	RectI rectButton;
 	bool isPlaySound = false;
@@ -25,14 +25,14 @@ public:
 		:
 		Button(rectButton, buttonColor)
 	{}
-	bool Update(Mouse& mouse, float dt, Sound& sound, Sound& clickSound);
+	bool Update(Mouse& mouse, Mouse::Event::Type& mouseEvent, float dt, Sound& sound, Sound& clickSound);
 	void CycleColor(float dt);
 private:
 	std::vector<Color> ColorCycle = { Colors::Green,Colors::Red,Colors::Magenta };
 	bool IsEnableEffect = false;
 	float effectTime = 1.0f;
 	float curEffectTime = 0.0f;
-	float timeEachColor = 0.3f;
+	float timeEachColor = 0.25f;
 	float holdColor = 0.0f;
 	int indexColor = 0;
 };
@@ -73,7 +73,7 @@ class ScrollingButton : public Button
 {
 public:
 	ScrollingButton(RectI rectButton, Color buttonColor);
-	void Draw(const RectI& rectMenu, Graphics& gfx) const;
+	void Draw(const RectI& rectMenu, Graphics& gfx, const Surface& iconTexture) const;
 	void MoveButtonVerical(int distanct);
 private:
 	int minDistance;

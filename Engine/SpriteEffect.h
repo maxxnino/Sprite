@@ -93,4 +93,17 @@ namespace SpriteEffect
 		Color chroma;
 		Color sub;
 	};
+	class CopyGhost
+	{
+	public:
+		void operator()(VecI pos, Color src, Graphics& gfx)
+		{
+			Color bgColor = gfx.GetPixel(pos.x, pos.y);
+			Color blendedPixel = {
+				unsigned char((src.GetR() + bgColor.GetR()) / 2),
+				unsigned char((src.GetG() + bgColor.GetG()) / 2),
+				unsigned char((src.GetB() + bgColor.GetB()) / 2) };
+			gfx.PutPixel(pos.x, pos.y, blendedPixel);
+		}
+	};
 };

@@ -36,4 +36,5 @@ private:
 	TypeMenu typeMenu = TypeMenu::MainMenu;
 	//Store index Element when choose element
 	int indexElementButton;
+	Mouse::Event::Type mouseEvent = Mouse::Event::Type::Invalid;
 };

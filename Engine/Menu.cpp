@@ -77,12 +77,13 @@ void Menu::ChangeState()
 void Menu::Update(Mouse& mouse, float dt)
 {
 	int i = 0;
+	mouseEvent = mouse.Read().GetType();
 	switch (typeMenu)
 	{
 	case Menu::SelectElement:
 		for (auto& c : elementSlot)
 		{
-			if (c.Update(mouse, dt, buttonSound, clickSound))
+			if (c.Update(mouse, mouseEvent, dt, buttonSound, clickSound))
 			{
 				elementButton[indexElementButton].ChangeType(c.GetType());
 				ChangeState();
@@ -91,14 +92,14 @@ void Menu::Update(Mouse& mouse, float dt)
 		}
 		break;
 	case Menu::MainMenu:
-		ScrollMenu.Update(mouse, dt, buttonSound, CraftSound);
+		ScrollMenu.Update(mouse, mouseEvent,dt, buttonSound, CraftSound);
 		for (auto& e : elementButton)
 		{
 			for (auto& c : craftButton)
 			{
-				c.Update(mouse, dt, buttonSound, CraftSound);
+				c.Update(mouse, mouseEvent, dt, buttonSound, CraftSound);
 			}
-			if (e.Update(mouse, dt, buttonSound, clickSound))
+			if (e.Update(mouse, mouseEvent, dt, buttonSound, clickSound))
 			{
 				indexElementButton = i;
 				ChangeState();

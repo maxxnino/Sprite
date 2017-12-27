@@ -12,7 +12,7 @@ void Button::Draw(Graphics & gfx) const
 }
 
 
-bool Button::Update(Mouse& mouse, float dt, Sound& sound, Sound& clickSound)
+bool Button::Update(Mouse& mouse, Mouse::Event::Type& mouseEvent, float dt, Sound& sound, Sound& clickSound)
 {
 	if (rectButton.isContaint(mouse.GetPos()))
 	{
@@ -22,14 +22,10 @@ bool Button::Update(Mouse& mouse, float dt, Sound& sound, Sound& clickSound)
 			isPlaySound = false;
 		}
 		buttonColor = Colors::Yellow;
-		while (!mouse.IsEmpty())
+		if (mouseEvent == Mouse::Event::Type::LPress)
 		{
-			const Mouse::Event e = mouse.Read();
-			if (e.GetType() == Mouse::Event::Type::LPress)
-			{
-				clickSound.Play();
-				return true;
-			}
+			clickSound.Play();
+			return true;
 		}
 	}
 	else
@@ -65,7 +61,7 @@ const ElementSlot::ElementType& ElementSlot::GetType() const
 }
 
 //CraftButton
-bool CraftButton::Update(Mouse & mouse, float dt, Sound& sound, Sound& clickSound)
+bool CraftButton::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float dt, Sound& sound, Sound& clickSound)
 {
 	if (rectButton.isContaint(mouse.GetPos()))
 	{
@@ -75,19 +71,15 @@ bool CraftButton::Update(Mouse & mouse, float dt, Sound& sound, Sound& clickSoun
 			isPlaySound = false;
 		}
 		buttonColor = Colors::Yellow;
-		while (!mouse.IsEmpty())
+		if (mouseEvent == Mouse::Event::Type::LPress)
 		{
-			const Mouse::Event e = mouse.Read();
-			if (e.GetType() == Mouse::Event::Type::LPress)
+			if (!IsEnableEffect)
 			{
 				clickSound.Play();
-				if (!IsEnableEffect)
-				{
-					IsEnableEffect = true;
-				}
-				CycleColor(dt);
-				return true;
+				IsEnableEffect = true;
 			}
+			CycleColor(dt);
+			return true;
 		}
 	}
 	else
@@ -145,7 +137,7 @@ ScrollingButton::ScrollingButton(RectI rectButton, Color buttonColor)
 	distance = rectButton.top;
 }
 
-void ScrollingButton::Draw(const RectI & rectMenu, Graphics & gfx) const
+void ScrollingButton::Draw(const RectI & rectMenu, Graphics & gfx, const Surface& iconTexture) const
 {
 	int xStart = rectButton.left;
 	int xEnd = rectButton.right;
@@ -170,7 +162,9 @@ void ScrollingButton::Draw(const RectI & rectMenu, Graphics & gfx) const
 	}
 	if (yStart != yEnd)
 	{
-		gfx.DrawRect(RectI(xStart, yStart, xEnd, yEnd), 4, buttonColor);
+		RectI rectDraw = { xStart, yStart, xEnd, yEnd };
+		gfx.DrawSprite({ xStart,yStart }, rectDraw, iconTexture.GetRect(),iconTexture, SpriteEffect::CopyGhost());
+		gfx.DrawRect(rectDraw, 4, buttonColor);
 	}
 }
 
