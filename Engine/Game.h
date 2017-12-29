@@ -26,6 +26,7 @@
 #include "Character.h"
 #include "FrameTimer.h"
 #include "Menu.h"
+#include "Font.h"
 
 class Game
 {
