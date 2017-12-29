@@ -28,10 +28,8 @@ public:
 	{
 		Fire,
 		Water,
-		Earth,
 		Lighting,
-		Nature,
-		Wind,
+		Earth,
 		None
 	};
 	ElementSlot(RectI rectButton, Color buttonColor, ElementType elementType = ElementType::None);

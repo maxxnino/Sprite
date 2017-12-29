@@ -241,31 +241,4 @@ void SkillButton::Draw(Graphics & gfx) const
 {
 	gfx.DrawSprite({ rectButton.left,rectButton.top }, iconTexture.GetRect(), iconTexture, SpriteEffect::CopyGhost());
 	Button::Draw(gfx);
-	switch (skillSet)
-	{
-	case SKillSet::skillFFF:
-		break;
-	case SKillSet::skillFFW:
-		break;
-	case SKillSet::skillFFE:
-		break;
-	case SKillSet::skillFWW:
-		break;
-	case SKillSet::skillFEE:
-		break;
-	case SKillSet::skillFWE:
-		break;
-	case SKillSet::skillWWW:
-		break;
-	case SKillSet::skillWWE:
-		break;
-	case SKillSet::skillWEE:
-		break;
-	case SKillSet::skillEEE:
-		break;
-	case SKillSet::None:
-		break;
-	default:
-		break;
-	}
 }
