@@ -95,8 +95,8 @@ bool CraftButton::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float dt
 void CraftButton::CraftSKill(const std::vector<ElementButton>& element)
 {
 	//if any of element slot is None wa cant craft skill
-	auto isNoneSKill = [](const ElementButton& e) { return (e.GetType() != ElementSlot::ElementType::None); };
-	if (std::any_of(element.begin(), element.end(), isNoneSKill))
+	const auto isNoneSKill = [](const ElementButton& e) { return (e.GetType() == ElementSlot::ElementType::None); };
+	if (std::none_of(element.begin(), element.end(), isNoneSKill))
 	{
 		//swap element for easy checking skill set
 		std::vector<ElementButton> elementswap = element;
@@ -113,10 +113,10 @@ void CraftButton::CraftSKill(const std::vector<ElementButton>& element)
 		}
 		//search skill set by total value
 		skillSet = std::find_if(lookup.skillSetContainer.begin(), lookup.skillSetContainer.end(),
-			[skillName](const SKillSet& skillset)
+			[skillName](const SKillSet& skill)
 		{
-			return skillset.nameSet == skillName;
-		})->skillName;
+			return skill.nameSet == skillName;
+		})->nameSet;
 	}
 }
 
@@ -157,6 +157,9 @@ char* CraftButton::ConvertElementToString(const ElementButton & e) const
 	case ElementSlot::ElementType::Water:
 		return "W";
 		break;
+	case ElementSlot::ElementType::Lighting:
+		return "L";
+		break;
 	case ElementSlot::ElementType::Earth:
 		return "E";
 		break;
@@ -166,7 +169,7 @@ char* CraftButton::ConvertElementToString(const ElementButton & e) const
 	}
 }
 
-const SKillSet::SkillName & CraftButton::GetSKillSet() const
+const std::string& CraftButton::GetSKillSet() const
 {
 	return skillSet;
 }
@@ -191,7 +194,7 @@ ScrollingButton::ScrollingButton(RectI rectButton, Color buttonColor)
 	distance = rectButton.top;
 }
 
-void ScrollingButton::Draw(const RectI & rectMenu, Graphics & gfx, const Surface& iconTexture) const
+void ScrollingButton::Draw(const RectI & rectMenu, Graphics & gfx, const Font& font,const Surface& iconTexture) const
 {
 	int xStart = rectButton.left;
 	int xEnd = rectButton.right;
@@ -219,6 +222,22 @@ void ScrollingButton::Draw(const RectI & rectMenu, Graphics & gfx, const Surface
 		RectI rectDraw = { xStart, yStart, xEnd, yEnd };
 		gfx.DrawSprite({ xStart,yStart }, rectDraw, iconTexture.GetRect(),iconTexture, SpriteEffect::CopyGhost());
 		gfx.DrawRect(rectDraw, 4, buttonColor);
+		if (skillName != "")
+		{
+			font.Draw({ xStart + 30,yStart + 40 },skillName, rectDraw ,gfx);
+		}
+	}
+}
+
+void ScrollingButton::Update(Mouse & mouse, Mouse::Event::Type & mouseEvent, const std::string& skillname, float dt, Sound & sound, Sound & clickSound)
+{
+	Button::Update(mouse, mouseEvent, dt, sound, clickSound);
+	if (rectButton.isContaint(mouse.GetPos()))
+	{
+		if (mouseEvent == Mouse::Event::Type::LPress)
+		{
+			skillName = skillname;
+		}
 	}
 }
 
@@ -237,8 +256,23 @@ void ScrollingButton::MoveButtonVerical(int distanct)
 	rectButton.bottom = distance + 104;
 }
 
-void SkillButton::Draw(Graphics & gfx) const
+void SkillButton::Update(Mouse & mouse, Mouse::Event::Type & mouseEvent, float dt, const CraftButton & craftbutton, Sound & sound, Sound & clickSound)
+{
+	Button::Update(mouse, mouseEvent, dt, sound, clickSound);
+	skillName = craftbutton.GetSKillSet();
+}
+
+void SkillButton::Draw(Graphics & gfx, const Font& font) const
 {
 	gfx.DrawSprite({ rectButton.left,rectButton.top }, iconTexture.GetRect(), iconTexture, SpriteEffect::CopyGhost());
 	Button::Draw(gfx);
+	if (skillName != "")
+	{
+		font.Draw({ rectButton.left + 30,rectButton.top + 40 }, skillName, gfx);
+	}
+}
+
+const std::string & SkillButton::GetSkillName() const
+{
+	return skillName;
 }

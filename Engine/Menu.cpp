@@ -36,7 +36,7 @@ Menu::Menu(Menu::TypeMenu typeMenu)
 void Menu::Draw(Graphics & gfx) const
 {
 	gfx.DrawSprite(VecI(0, 0), surf, SpriteEffect::Copy());
-	ScrollMenu.Draw(gfx);
+	ScrollMenu.Draw(gfx, font);
 	switch (typeMenu)
 	{
 	case Menu::SelectElement:
@@ -55,7 +55,7 @@ void Menu::Draw(Graphics & gfx) const
 		{
 			elementButton[i].Draw(gfx, skillIcon);
 		}
-		skillButton.Draw(gfx);
+		skillButton.Draw(gfx,font);
 		craftButton.Draw(gfx);
 		break;
 	default:
@@ -93,7 +93,7 @@ void Menu::Update(Mouse& mouse, float dt)
 		}
 		break;
 	case Menu::MainMenu:
-		ScrollMenu.Update(mouse, mouseEvent,dt, buttonSound, clickSound);
+		ScrollMenu.Update(mouse, mouseEvent, skillButton.GetSkillName(),dt, buttonSound, clickSound);
 		for (auto& e : elementButton)
 		{
 			if (e.Update(mouse, mouseEvent, dt, buttonSound, clickSound))
@@ -105,7 +105,7 @@ void Menu::Update(Mouse& mouse, float dt)
 			i++;
 		}
 		craftButton.Update(mouse, mouseEvent, dt, elementButton, buttonSound, CraftSound);
-		skillButton.Update(mouse, mouseEvent,dt, buttonSound, CraftSound);
+		skillButton.Update(mouse, mouseEvent,dt, craftButton,buttonSound, CraftSound);
 		break;
 	default:
 		break;

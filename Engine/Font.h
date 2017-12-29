@@ -15,6 +15,7 @@ public:
 		GlyphHeight(font.GetHeight()/ Rows)
 	{}
 	void Draw(const VecI& pos, const std::string& words, Graphics& gfx) const;
+	void Draw(const VecI& pos, const std::string& words, const RectI& clip,Graphics& gfx) const;
 private:
 	RectI GetCharaterRect(const char c) const;
 private:

@@ -5,6 +5,7 @@
 #include "SpriteEffect.h"
 #include "SoundEffect.h"
 #include "Skill.h"
+#include "Font.h"
 #include <algorithm>
 #include <vector>
 
@@ -62,10 +63,10 @@ public:
 	void CraftSKill(const std::vector<ElementButton>& element);
 	void CycleColor(float dt);
 	char* ConvertElementToString(const ElementButton& e) const;
-	const SKillSet::SkillName& GetSKillSet() const;
+	const std::string& GetSKillSet() const;
 private:
 	std::vector<Color> ColorCycle = { Colors::Green,Colors::Red,Colors::Magenta };
-	SKillSet::SkillName skillSet = SKillSet::None;
+	std::string skillSet = "";
 	SkillLookup lookup;
 	bool IsEnableEffect = false;
 	static constexpr float effectTime = 1.0f;
@@ -81,7 +82,7 @@ public:
 	SkillButton(RectI rectButton, Color buttonColor, CraftButton craftButton)
 		:
 		Button(rectButton, buttonColor),
-		skillSet(craftButton.GetSKillSet()),
+		skillName(craftButton.GetSKillSet()),
 		iconTexture(104, 104)
 	{
 		for (int y = 0; y < 104; y++)
@@ -92,19 +93,23 @@ public:
 			}
 		}
 	}
-	void Draw(Graphics& gfx) const;
+	void Update(Mouse& mouse, Mouse::Event::Type& mouseEvent, float dt, const CraftButton& craftbutton,Sound& sound, Sound& clickSound);
+	void Draw(Graphics& gfx, const Font& font) const;
+	const std::string& GetSkillName() const;
 private:
 	Surface iconTexture;
-	SKillSet::SkillName skillSet;
+	std::string skillName;
 };
 class ScrollingButton : public Button
 {
 public:
 	ScrollingButton(RectI rectButton, Color buttonColor);
-	void Draw(const RectI& rectMenu, Graphics& gfx, const Surface& iconTexture) const;
+	void Draw(const RectI& rectMenu, Graphics& gfx,const Font& font, const Surface& iconTexture) const;
+	void Update(Mouse& mouse, Mouse::Event::Type& mouseEvent, const std::string& skillName, float dt, Sound& sound, Sound& clickSound);
 	void MoveButtonVerical(int distanct);
 private:
 	int minDistance;
 	int maxDistance;
 	int distance;
+	std::string skillName = "";
 };

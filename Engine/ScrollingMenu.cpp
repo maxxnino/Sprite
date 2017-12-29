@@ -21,15 +21,15 @@ ScrollingMenu::ScrollingMenu(RectI rectMenu)
 	}
 }
 
-void ScrollingMenu::Draw(Graphics & gfx) const
+void ScrollingMenu::Draw(Graphics & gfx, const Font& font) const
 {
 	for (int i = 0; i < nButton; i++)
 	{
-		buttons[i].Draw(rectMenu, gfx, iconTexture);
+		buttons[i].Draw(rectMenu, gfx, font,iconTexture);
 	}
 }
 
-void ScrollingMenu::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float dt, Sound & sound, Sound & clickSound)
+void ScrollingMenu::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, const std::string& skillName,float dt, Sound & sound, Sound & clickSound)
 {
 	if (mouseEvent == Mouse::Event::Type::WheelUp)
 	{
@@ -46,6 +46,6 @@ void ScrollingMenu::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float 
 	for (auto& c : buttons)
 	{
 		c.MoveButtonVerical(moveVertical);
-		c.Update(mouse, mouseEvent, dt, sound, clickSound);
+		c.Update(mouse, mouseEvent, skillName, dt,sound, clickSound);
 	}
 }

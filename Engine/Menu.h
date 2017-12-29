@@ -7,6 +7,7 @@
 #include "Sound.h"
 #include <vector>
 #include "ScrollingMenu.h"
+#include "Font.h"
 
 class Menu
 {
@@ -33,6 +34,7 @@ private:
 	Sound buttonSound = { L"Sounds\\Slither0.wav" };
 	Sound clickSound = { L"Sounds\\Eat.wav" };
 	Sound CraftSound = { L"Sounds\\arkpad.wav" };
+	Font font = { "Font16x28.bmp",Colors::White };
 	ScrollingMenu ScrollMenu = {RectI(100,100,400,600)};
 	TypeMenu typeMenu = TypeMenu::MainMenu;
 	//Store index Element when choose element

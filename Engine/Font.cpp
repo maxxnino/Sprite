@@ -11,7 +11,24 @@ void Font::Draw(const VecI& pos,const std::string & text, Graphics & gfx) const
 		}
 		else
 		{
-			gfx.DrawSprite(curPos, GetCharaterRect(c), font, SpriteEffect::Subtitute(chroma, Colors::Blue));
+			gfx.DrawSprite(curPos, GetCharaterRect(c), font, SpriteEffect::Subtitute(chroma, Colors::Yellow));
+			curPos.x += GlyphWidth;
+		}
+	}
+}
+
+void Font::Draw(const VecI & pos, const std::string & text, const RectI & clip, Graphics & gfx) const
+{
+	VecI curPos = pos;
+	for (auto c : text)
+	{
+		if (c == ' ')
+		{
+			curPos.x += GlyphWidth;
+		}
+		else
+		{
+			gfx.DrawSprite(curPos, clip,GetCharaterRect(c), font, SpriteEffect::Subtitute(chroma, Colors::Yellow));
 			curPos.x += GlyphWidth;
 		}
 	}
