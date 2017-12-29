@@ -61,7 +61,7 @@ const ElementSlot::ElementType& ElementSlot::GetType() const
 }
 
 //CraftButton
-bool CraftButton::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float dt, Sound& sound, Sound& clickSound)
+bool CraftButton::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float dt, const std::vector<ElementButton>& element, Sound& sound, Sound& clickSound)
 {
 	if (rectButton.isContaint(mouse.GetPos()))
 	{
@@ -75,11 +75,12 @@ bool CraftButton::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float dt
 		{
 			if (!IsEnableEffect)
 			{
+				CraftSKill(element);
 				clickSound.Play();
 				IsEnableEffect = true;
+				CycleColor(dt);
+				return true;
 			}
-			CycleColor(dt);
-			return true;
 		}
 	}
 	else
@@ -89,6 +90,34 @@ bool CraftButton::Update(Mouse & mouse, Mouse::Event::Type& mouseEvent, float dt
 	}
 	CycleColor(dt);
 	return false;
+}
+
+void CraftButton::CraftSKill(const std::vector<ElementButton>& element)
+{
+	//if any of element slot is None wa cant craft skill
+	auto isNoneSKill = [](const ElementButton& e) { return (e.GetType() != ElementSlot::ElementType::None); };
+	if (std::any_of(element.begin(), element.end(), isNoneSKill))
+	{
+		//swap element for easy checking skill set
+		std::vector<ElementButton> elementswap = element;
+		std::sort(elementswap.begin(), elementswap.end(),
+			[](const ElementButton& lhs, const ElementButton& rhs)
+		{
+			return (int)lhs.GetType() < (int)rhs.GetType();
+		});
+		//create a name set for 3 element;
+		std::string skillName;
+		for (auto& c : elementswap)
+		{
+			skillName.push_back(*ConvertElementToString(c));
+		}
+		//search skill set by total value
+		skillSet = std::find_if(lookup.skillSetContainer.begin(), lookup.skillSetContainer.end(),
+			[skillName](const SKillSet& skillset)
+		{
+			return skillset.nameSet == skillName;
+		})->skillName;
+	}
 }
 
 void CraftButton::CycleColor(float dt)
@@ -117,6 +146,31 @@ void CraftButton::CycleColor(float dt)
 		}
 	}
 }
+
+char* CraftButton::ConvertElementToString(const ElementButton & e) const
+{
+	switch (e.GetType())
+	{
+	case ElementSlot::ElementType::Fire:
+		return "F";
+		break;
+	case ElementSlot::ElementType::Water:
+		return "W";
+		break;
+	case ElementSlot::ElementType::Earth:
+		return "E";
+		break;
+	default:
+		return "";
+		break;
+	}
+}
+
+const SKillSet::SkillName & CraftButton::GetSKillSet() const
+{
+	return skillSet;
+}
+
 
 //ElementButton
 void ElementButton::Draw(Graphics & gfx, const std::vector<Surface>& iconTexture) const
@@ -181,4 +235,37 @@ void ScrollingButton::MoveButtonVerical(int distanct)
 	}
 	rectButton.top = distance;
 	rectButton.bottom = distance + 104;
+}
+
+void SkillButton::Draw(Graphics & gfx) const
+{
+	gfx.DrawSprite({ rectButton.left,rectButton.top }, iconTexture.GetRect(), iconTexture, SpriteEffect::CopyGhost());
+	Button::Draw(gfx);
+	switch (skillSet)
+	{
+	case SKillSet::skillFFF:
+		break;
+	case SKillSet::skillFFW:
+		break;
+	case SKillSet::skillFFE:
+		break;
+	case SKillSet::skillFWW:
+		break;
+	case SKillSet::skillFEE:
+		break;
+	case SKillSet::skillFWE:
+		break;
+	case SKillSet::skillWWW:
+		break;
+	case SKillSet::skillWWE:
+		break;
+	case SKillSet::skillWEE:
+		break;
+	case SKillSet::skillEEE:
+		break;
+	case SKillSet::None:
+		break;
+	default:
+		break;
+	}
 }

@@ -3,14 +3,16 @@
 
 Menu::Menu(Menu::TypeMenu typeMenu)
 	:
-	typeMenu(typeMenu)
+	typeMenu(typeMenu),
+	//Craft Button
+	craftButton(CraftButton(RectI(837, 232, 1122, 316), Colors::Blue)),
+	skillButton(SkillButton(RectI(928, 468, 1032, 572), Colors::Blue, craftButton))
 {
 	//Select Ellement
 	elementButton.emplace_back(ElementButton( RectI(748, 68, 852, 172), Colors::Blue));
 	elementButton.emplace_back(ElementButton( RectI(928, 68, 1032, 172), Colors::Blue));
 	elementButton.emplace_back(ElementButton( RectI(1108, 68, 1212, 172), Colors::Blue));
-	//Craft Button
-	craftButton.emplace_back(CraftButton( RectI(837, 232, 1122, 316), Colors::Blue));
+	
 	//Element Slot
 	int left = 805;
 	int top = 405;
@@ -48,14 +50,15 @@ void Menu::Draw(Graphics & gfx) const
 		{
 			elementButton[i].Draw(gfx, skillIcon);
 		}
-		craftButton[0].Draw(gfx);
+		craftButton.Draw(gfx);
 		break;
 	case Menu::MainMenu:
 		for (size_t i = 0; i < elementButton.size(); i++)
 		{
 			elementButton[i].Draw(gfx, skillIcon);
 		}
-		craftButton[0].Draw(gfx);
+		skillButton.Draw(gfx);
+		craftButton.Draw(gfx);
 		break;
 	default:
 		break;
@@ -92,13 +95,9 @@ void Menu::Update(Mouse& mouse, float dt)
 		}
 		break;
 	case Menu::MainMenu:
-		ScrollMenu.Update(mouse, mouseEvent,dt, buttonSound, CraftSound);
+		ScrollMenu.Update(mouse, mouseEvent,dt, buttonSound, clickSound);
 		for (auto& e : elementButton)
 		{
-			for (auto& c : craftButton)
-			{
-				c.Update(mouse, mouseEvent, dt, buttonSound, CraftSound);
-			}
 			if (e.Update(mouse, mouseEvent, dt, buttonSound, clickSound))
 			{
 				indexElementButton = i;
@@ -107,6 +106,8 @@ void Menu::Update(Mouse& mouse, float dt)
 			}
 			i++;
 		}
+		craftButton.Update(mouse, mouseEvent, dt, elementButton, buttonSound, CraftSound);
+		skillButton.Update(mouse, mouseEvent,dt, buttonSound, CraftSound);
 		break;
 	default:
 		break;

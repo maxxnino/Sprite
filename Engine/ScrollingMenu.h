@@ -13,7 +13,7 @@ private:
 	RectI rectMenu;
 	static constexpr int nButton = 8;
 	int moveVertical = 0;
-	static constexpr float speedScrolling = 500;
+	static constexpr float speedScrolling = 1500;
 	static constexpr int buttonDismention = 104;
 	static constexpr int buttonPadding = 20;
 	Surface iconTexture;

@@ -25,7 +25,8 @@ private:
 	// Button Container
 	std::vector<ElementSlot> elementSlot;
 	std::vector<ElementButton> elementButton;
-	std::vector<CraftButton> craftButton;
+	CraftButton craftButton;
+	SkillButton skillButton;
 	std::vector<Surface> skillIcon;
 	//Background Menu
 	Surface surf = ("Skill_menu.bmp");
